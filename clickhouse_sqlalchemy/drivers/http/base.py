@@ -1,5 +1,7 @@
 
 import sqlalchemy as sa
+
+from .utils import FORMAT_SUFFIX
 from ...util.compat import string_types
 from ..base import ClickHouseDialect, ClickHouseExecutionContextBase
 from . import connector
@@ -32,6 +34,8 @@ class ClickHouseDialect_http(ClickHouseDialect):
         endpoint = url.query.get('endpoint', '')
 
         kwargs.update(url.query)
+        if kwargs.get('verify') and kwargs['verify'] in ('False', 'false'):
+            kwargs['verify'] = False
 
         db_url = '%s://%s:%d/%s' % (protocol, url.host, port, endpoint)
 
